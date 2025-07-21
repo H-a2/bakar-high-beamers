@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAKAR HIGH-BEAMER POWER STATION</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Impact', 'Arial Black', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://i.imgur.com/puzSyT0.jpeg') center/cover fixed;
+            color: #ffcc00;
+            min-height: 100vh;
+            overflow-x: hidden;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><path d="M12 2L2 16L9 17L6 30L12 24L18 30L15 17L22 16Z" fill="%23ffcc00"/></svg>') 12 16, auto;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* Glassmorphism panels */
+        .glass-panel {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 204, 0, 0.5);
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-panel:hover {
+            box-shadow: 0 0 50px rgba(255, 204, 0, 0.5);
+            transform: translateY(-5px);
+        }
+        
+        /* Header styles */
+        header {
+            text-align: center;
+            padding: 2rem 0;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 5rem;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(255, 204, 0, 0.9), 
+                         0 0 40px rgba(255, 204, 0, 0.7),
+                         0 0 60px rgba(255, 204, 0, 0.5);
+            letter-spacing: 5px;
+            animation: neon-pulse 1.5s infinite alternate;
+            background: linear-gradient(to right, #ffcc00, #ffffff, #ffcc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .tagline {
+            font-size: 1.8rem;
+            color: #ffcc00;
+            font-style: italic;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
+        }
+        
+        .creators {
+            font-size: 1.2rem;
+            color: #ff9900;
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+        
+        @keyframes neon-pulse {
+            from {
+                text-shadow: 0 0 10px rgba(255, 204, 0, 0.7), 
+                             0 0 20px rgba(255, 204, 0, 0.5),
+                             0 0 30px rgba(255, 204, 0, 0.3);
+            }
+            to {
+                text-shadow: 0 0 15px rgba(255, 204, 0, 0.9), 
+                             0 0 30px rgba(255, 204, 0, 0.7),
+                             0 0 45px rgba(255, 204, 0, 0.5);
+            }
+        }
+        
+        /* Power station UI */
+        .formula-display {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            color: #ffcc00;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+            font-weight: bold;
+        }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .voltage-display {
+            text-align: center;
+            font-size: 1.8rem;
+            color: #ffcc00;
+            padding: 1rem;
+            border-radius: 10px;
+        }
+        
+        .slider-container {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+            color: #ffcc00;
+        }
+        
+        .resistance-slider {
+            width: 100%;
+            height: 30px;
+            -webkit-appearance: none;
+            background: linear-gradient(to right, #ff0000, #ffcc00, #00ff00);
+            border-radius: 15px;
+            outline: none;
+        }
+        
+        .resistance-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #ffcc00;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.8);
+            border: 3px solid white;
+        }
+        
+        .slider-range {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 1.1rem;
+            color: #ffcc00;
+        }
+        
+        /* Power meter */
+        .power-meter {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .power-label {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #ffcc00;
+        }
+        
+        .power-value {
+            font-size: 6rem;
+            font-weight: bold;
+            color: #ffcc00;
+            text-shadow: 0 0 20px rgba(255, 204, 0, 0.7);
+            min-height: 100px;
+        }
+        
+        .infinity {
+            font-size: 5rem;
+            animation: infinity-pulse 1s infinite alternate;
+        }
+        
+        @keyframes infinity-pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+        
+        /* Overload warning */
+        .overload-warning {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 0, 0, 0.3);
+            border-radius: 10px;
+            margin-top: 1rem;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff0000;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+            display: none;
+            animation: flash-warning 0.5s infinite alternate;
+        }
+        
+        @keyframes flash-warning {
+            from { opacity: 1; }
+            to { opacity: 0.4; }
+        }
+        
+        /* Sparks animation */
+        .sparks {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 5;
+        }
+        
+        .spark {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #ffcc00;
+            border-radius: 50%;
+            box-shadow: 0 0 15px 3px #ffcc00;
+            animation: spark-fade 0.8s forwards;
+        }
+        
+        @keyframes spark-fade {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0); }
+        }
+        
+        /* Share button */
+        .share-container {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .share-btn {
+            background: linear-gradient(to right, #ffcc00, #ff9900);
+            color: #000;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.5);
+        }
+        
+        .share-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.8);
+        }
+        
+        .share-btn:active {
+            transform: scale(0.98);
+        }
+        
+        /* Easter egg overlay */
+        .easter-egg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        
+        .easter-egg.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .egg-title {
+            font-size: 5rem;
+            color: #ff00ff;
+            text-shadow: 0 0 25px rgba(255, 0, 255, 0.8);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .egg-text {
+            font-size: 2.5rem;
+            color: #00f7ff;
+            max-width: 90%;
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .close-egg {
+            margin-top: 2rem;
+            padding: 1rem 2.5rem;
+            background: #ff00ff;
+            color: #000;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.7);
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1.5rem;
+            color: #ffcc00;
+            font-size: 1rem;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3rem;
+            }
+            
+            .formula-display {
+                font-size: 2rem;
+            }
+            
+            .power-value {
+                font-size: 4rem;
+            }
+        }
+        
+        /* Quote sections */
+        .quote-section {
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-style: italic;
+            color: #ffcc00;
+            font-size: 1.3rem;
+        }
+        
+        .quote-section p {
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+        }
+        
+        /* Perpetual motion */
+        .perpetual-motion {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        
+        .motion-wheel {
+            width: 150px;
+            height: 150px;
+            border: 8px solid #ffcc00;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 3s linear infinite;
+            position: relative;
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.5);
+        }
+        
+        .motion-wheel::after {
+            content: "BAKAR'S BUND POWER";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffcc00;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1rem;
+            width: 100px;
+            text-shadow: 0 0 5px rgba(255, 204, 0, 0.7);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* PhD section */
+        .phd-section {
+            text-align: center;
+        }
+        
+        .phd-title {
+            color: #ffcc00;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px rgba(255, 204, 0, 0.7);
+        }
+        
+        .phd-content {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .phd-point {
+            background: rgba(255, 204, 0, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            width: 250px;
+            text-align: center;
+            flex-grow: 1;
+        }
+        
+        .phd-point h3 {
+            color: #ffcc00;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+        }
+        
+        .appointment {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 2rem auto;
+            max-width: 500px;
+            text-align: center;
+            border: 3px dashed #ffcc00;
+        }
+        
+        .appointment h3 {
+            color: #ffcc00;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+        
+        /* Conspiracy section */
+        .conspiracy {
+            text-align: center;
+            border: 3px solid #ff0000;
+        }
+        
+        .conspiracy h2 {
+            color: #ff0000;
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+        }
+        
+        .equation {
+            font-size: 2.5rem;
+            color: #ffcc00;
+            margin: 1.5rem 0;
+            font-weight: bold;
+            text-shadow: 0 0 15px rgba(255, 204, 0, 0.7);
+        }
+        
+        /* Beam effect */
+        .beams {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .beam {
+            position: absolute;
+            width: 12px;
+            height: 0;
+            background: linear-gradient(to bottom, rgba(255, 255, 0, 0), rgba(255, 255, 0, 0.8));
+            border-radius: 50%;
+            animation: beam-grow 4s infinite alternate;
+        }
+        
+        @keyframes beam-grow {
+            0% { height: 0; opacity: 0; }
+            100% { height: 100%; opacity: 0.5; }
+        }
+        
+        /* Gallery section */
+        .gallery-section {
+            text-align: center;
+            margin-top: 3rem;
+        }
+        
+        .gallery-title {
+            font-size: 2.5rem;
+            color: #ffcc00;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 15px rgba(255, 204, 0, 0.7);
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .gallery-item {
+            border-radius: 10px;
+            overflow: hidden;
+            height: 200px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 3px solid #ffcc00;
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(255, 204, 0, 0.8);
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+        
+        .modal-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            border: 5px solid #ffcc00;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.7);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 3rem;
+            color: #ffcc00;
+            cursor: pointer;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
+        }
+        
+        /* Harsh jokes section */
+        .jokes-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .joke-card {
+            background: rgba(255, 204, 0, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 2px solid #ffcc00;
+        }
+        
+        .joke-card h3 {
+            color: #ff9900;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .joke-card p {
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+        
+        /* Easter egg indicator */
+        .egg-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #ffcc00;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            z-index: 50;
+        }
+    </style>
+</head>
+<body>
+    <!-- Beam effects -->
+    <div class="beams" id="beams"></div>
+    
+    <!-- Sparks container -->
+    <div class="sparks" id="sparks"></div>
+    
+    <!-- Easter Egg -->
+    <div class="easter-egg" id="easterEgg">
+        <h2 class="egg-title" id="eggTitle">NIPPLE TWISTER SUPREME MODE ACTIVATED!</h2>
+        <p class="egg-text" id="eggText">Warning: Bakar's high beams have achieved maximum output. This power level has never been recorded in human history. Proceed with extreme caution!</p>
+        <button class="close-egg" id="closeEgg">RETURN TO STATION</button>
+    </div>
+    
+    <!-- Image Modal -->
+    <div class="modal" id="imageModal">
+        <span class="close-modal" id="closeModal">&times;</span>
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="Enlarged image">
+        </div>
+    </div>
+    
+    <!-- Easter egg indicator -->
+    <div class="egg-indicator" id="eggIndicator">Easter Egg: None</div>
+    
+    <div class="container">
+        <header class="glass-panel">
+            <h1>BAKAR HIGH-BEAMER POWER STATION</h1>
+            <p class="tagline">Harnessing Unprecedented Photonic Energy Since 2023</p>
+            <p class="tagline">Perpetual Motion Powered by Bakar's Bund™</p>
+            <p class="creators">Created by Hamza Ali & Afnan Ali - The Ali Prophecy</p>
+        </header>
+        
+        <main>
+            <div class="glass-panel">
+                <div class="quote-section">
+                    <p>"They are the light to our night sky, shining bright Monday to Friday without breaks!"</p>
+                    <p>"The stars' light is only from the reflected light of Bakar's high beams"</p>
+                    <p>"This shit is not just adequate, it is fantastic, it is ground breaking!"</p>
+                </div>
+                
+                <div class="formula-display" id="formula">
+                    P = V² / R = 1000² / <span id="resistanceValue">50</span> Ω
+                </div>
+                
+                <div class="controls">
+                    <div class="voltage-display">
+                        Fixed Voltage: <span id="voltage">1000</span> V (Bakar's Peak Photon Emission)
+                    </div>
+                    
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span>Resistance (Ω)</span>
+                            <span id="currentResistance">50 Ω</span>
+                        </div>
+                        <input type="range" min="0.1" max="100" value="50" step="0.1" class="resistance-slider" id="resistanceSlider">
+                        <div class="slider-range">
+                            <span>0.1 Ω (Maximum Power)</span>
+                            <span>100 Ω (Safe Mode)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="power-meter">
+                        <div class="power-label">CURRENT POWER OUTPUT</div>
+                        <div class="power-value" id="powerOutput">20000 W</div>
+                    </div>
+                    
+                    <div class="overload-warning" id="overloadWarning">
+                        ⚡ GRID OVERLOAD! CONTAINMENT BREACH IMMINENT! ⚡
+                    </div>
+                </div>
+                
+                <div class="perpetual-motion">
+                    <div class="motion-wheel"></div>
+                </div>
+                
+                <div class="share-container">
+                    <button class="share-btn" id="shareBtn">
+                        <i class="fas fa-bolt"></i> SEND THIS WATTAGE TO BAKAR
+                    </button>
+                </div>
+            </div>
+            
+            <div class="glass-panel phd-section">
+                <h2 class="phd-title">Bakar PhD Thesis: "Perpetual Motion from Bakar Nipple High Beamers"</h2>
+                
+                <div class="phd-content">
+                    <div class="phd-point">
+                        <h3>Quantum Theory</h3>
+                        <p>High beams exist in multiple states simultaneously - both blinding and hilarious at the same time</p>
+                    </div>
+                    <div class="phd-point">
+                        <h3>Religious Study</h3>
+                        <p>High beams as the base for Illuminati conspiracy theories</p>
+                    </div>
+                    <div class="phd-point">
+                        <h3>Cyclotron Proton Accelerator</h3>
+                        <p>Bakar's high beams can accelerate protons to near-light speeds</p>
+                    </div>
+                </div>
+                
+                <div class="equation">
+                    (High beam)² = high² + beam² + 2(high beam)
+                </div>
+                
+                <div class="equation">
+                    Area of Power Projection = Length × Width of Bakar's Nippletwister
+                </div>
+                
+                <div class="appointment">
+                    <h3>Abdul Rehman Style Appointment</h3>
+                    <p>Open 12-8 YouFibre Hours</p>
+                    <p>High beams flashing = invitation confirmed</p>
+                    <p>"Bakar, show them high beams to your 2007 Donny! He'll write a PhD thesis about them lovely quantum beamers!"</p>
+                </div>
+            </div>
+            
+            <div class="glass-panel conspiracy">
+                <h2>ILLUMINATI HIGH BEAM CONSPIRACY THEORY</h2>
+                <p>Bakar's high beams are actually the source of all energy in the universe</p>
+                <p>They power the illuminati, control world governments, and are the reason your toast always lands butter-side down</p>
+                <div class="equation">
+                    E = mc² = (high beam)²
+                </div>
+                <p>Bakar's high beams can be used as Tesla coils when resistance drops below 1Ω</p>
+            </div>
+            
+            <div class="glass-panel">
+                <h2 class="gallery-title">BAKAR HIGH-BEAMER GALLERY</h2>
+                <p class="tagline">Visual evidence of Bakar's groundbreaking photonic emissions</p>
+                
+                <div class="gallery-grid">
+                    <div class="gallery-item" data-src="https://i.imgur.com/L8jRQEP.jpeg">
+                        <img src="https://i.imgur.com/L8jRQEP.jpeg" alt="Bakar High Beamer 1">
+                    </div>
+                    <div class="gallery-item" data-src="https://i.imgur.com/9Jwf95y.jpeg">
+                        <img src="https://i.imgur.com/9Jwf95y.jpeg" alt="Bakar High Beamer 2">
+                    </div>
+                    <div class="gallery-item" data-src="https://i.imgur.com/LgxCxfm.jpeg">
+                        <img src="https://i.imgur.com/LgxCxfm.jpeg" alt="Bakar High Beamer 3">
+                    </div>
+                    <div class="gallery-item" data-src="https://i.imgur.com/uGbWSkz.jpeg">
+                        <img src="https://i.imgur.com/uGbWSkz.jpeg" alt="Bakar High Beamer 4">
+                    </div>
+                    <div class="gallery-item" data-src="https://i.imgur.com/uyXeRj0.jpeg">
+                        <img src="https://i.imgur.com/uyXeRj0.jpeg" alt="Bakar High Beamer 5">
+                    </div>
+                    <div class="gallery-item" data-src="https://i.imgur.com/0rZGlZ2.jpeg">
+                        <img src="https://i.imgur.com/0rZGlZ2.jpeg" alt="Bakar High Beamer 6">
+                    </div>
+                    <div class="gallery-item" data-src="https://i.imgur.com/MDGwCox.jpeg">
+                        <img src="https://i.imgur.com/MDGwCox.jpeg" alt="Bakar High Beamer 7">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass-panel">
+                <h2 class="phd-title">HARSH PHYSICS PUNS & ROASTS</h2>
+                <div class="jokes-section">
+                    <div class="joke-card">
+                        <h3>Bakar's Bund Physics</h3>
+                        <p>"Bakar's high beams have such low resistance, they're practically superconductors for embarrassment!"</p>
+                    </div>
+                    <div class="joke-card">
+                        <h3>Cyclotron Acceleration</h3>
+                        <p>"Bakar's nipples aren't just high beams - they're cyclotron proton accelerators for roasting potential!"</p>
+                    </div>
+                    <div class="joke-card">
+                        <h3>Thermodynamics of Embarrassment</h3>
+                        <p>"The second law of thermodynamics states that Bakar's high beams will always increase the entropy of any social situation!"</p>
+                    </div>
+                    <div class="joke-card">
+                        <h3>Quantum Shame States</h3>
+                        <p>"Bakar exists in a quantum state of perpetual embarrassment - both aware and unaware of his high beams simultaneously!"</p>
+                    </div>
+                    <div class="joke-card">
+                        <h3>Relativistic Time Dilation</h3>
+                        <p>"When Bakar flashes his high beams, time slows down for everyone in the vicinity due to relativistic embarrassment effects!"</p>
+                    </div>
+                    <div class="joke-card">
+                        <h3>Photonic Overload</h3>
+                        <p>"Bakar's high beams emit so many photons, they've been classified as a renewable energy source by the UN!"</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="glass-panel">
+            <p>Bakar High-Beamer Power Station v4.0 | Certified ISO 9001: Meme Compliance</p>
+            <p>Warning: Prolonged exposure may cause blindness or uncontrollable laughter</p>
+            <p>Patent Pending: Bakar's Bund™ Energy Technology | Prophecy of the Alis Fulfilled</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM elements
+            const resistanceSlider = document.getElementById('resistanceSlider');
+            const currentResistance = document.getElementById('currentResistance');
+            const resistanceValue = document.getElementById('resistanceValue');
+            const powerOutput = document.getElementById('powerOutput');
+            const voltage = document.getElementById('voltage');
+            const overloadWarning = document.getElementById('overloadWarning');
+            const sparksContainer = document.getElementById('sparks');
+            const shareBtn = document.getElementById('shareBtn');
+            const easterEgg = document.getElementById('easterEgg');
+            const closeEgg = document.getElementById('closeEgg');
+            const beamsContainer = document.getElementById('beams');
+            const imageModal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            const closeModal = document.getElementById('closeModal');
+            const eggTitle = document.getElementById('eggTitle');
+            const eggText = document.getElementById('eggText');
+            const eggIndicator = document.getElementById('eggIndicator');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            
+            // Constants
+            const FIXED_VOLTAGE = 1000; // Bakar's fixed voltage
+            const OVERLOAD_THRESHOLD = 10000; // 10kW
+            let lastResistance = 50; // Initial resistance value
+            let sparksActive = false;
+            let easterEggActive = false;
+            let keySequence = '';
+            
+            // Easter egg codes
+            const easterEggs = {
+                'NIPPLETWISTER': {
+                    title: "NIPPLE TWISTER SUPREME MODE ACTIVATED!",
+                    text: "Warning: Bakar's high beams have achieved maximum output. This power level has never been recorded in human history. Proceed with extreme caution!",
+                    action: () => confetti({ particleCount: 300, spread: 100 })
+                },
+                'PROPHECY': {
+                    title: "THE PROPHECY OF THE ALIS",
+                    text: "It was foretold that three Alis would rule the world: Bakar Ali, Hamza Ali, and Afnan Ali. The prophecy came true when Bakar's high beams appeared, blinding the masses with their brilliance!",
+                    action: () => {
+                        document.body.style.background = "linear-gradient(135deg, #000000, #330033)";
+                        setTimeout(() => {
+                            document.body.style.background = "linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://i.imgur.com/puzSyT0.jpeg') center/cover fixed";
+                        }, 5000);
+                    }
+                },
+                'BUND': {
+                    title: "BAKAR'S BUND POWER THEORY",
+                    text: "Scientific breakthrough: The power output of Bakar's high beams is directly proportional to the square of his Bund's gravitational pull!",
+                    action: () => {
+                        const equation = document.createElement('div');
+                        equation.className = 'equation';
+                        equation.textContent = "P ∝ (Bund Gravity)²";
+                        document.querySelector('.conspiracy').appendChild(equation);
+                    }
+                },
+                'DONNY': {
+                    title: "2007 DONNY APPROVED",
+                    text: "Your 2007 Donny has validated Bakar's high beams as the most efficient photon emission system since the Big Bang!",
+                    action: () => {
+                        alert("Your 2007 Donny has been notified of Bakar's high beam achievement!");
+                    }
+                },
+                'REHMAN': {
+                    title: "REHMAN HIGH-BEAMER CHALLENGE",
+                    text: "Rehman has challenged Bakar to a high beam showdown! Winner gets eternal bragging rights and a lifetime supply of nipple tape.",
+                    action: () => {
+                        const competition = document.createElement('div');
+                        competition.className = 'appointment';
+                        competition.innerHTML = `
+                            <h3>HIGH BEAM SHOWDOWN</h3>
+                            <p>Bakar vs. Rehman</p>
+                            <p>Winner: Eternal Glory</p>
+                            <p>Loser: Buys drinks for a year</p>
+                        `;
+                        document.querySelector('.phd-section').appendChild(competition);
+                    }
+                }
+            };
+
+            // Create beam effects
+            function createBeams() {
+                for (let i = 0; i < 8; i++) {
+                    const beam = document.createElement('div');
+                    beam.classList.add('beam');
+                    
+                    // Random position
+                    const left = Math.random() * 100;
+                    const delay = Math.random() * 4;
+                    
+                    beam.style.left = left + '%';
+                    beam.style.animationDelay = delay + 's';
+                    
+                    beamsContainer.appendChild(beam);
+                }
+            }
+            
+            // Initialize
+            updatePower();
+            createBeams();
+            
+            // Setup gallery
+            galleryItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const src = item.getAttribute('data-src');
+                    modalImage.src = src;
+                    imageModal.classList.add('active');
+                });
+            });
+            
+            closeModal.addEventListener('click', () => {
+                imageModal.classList.remove('active');
+            });
+            
+            // Resistance slider event
+            resistanceSlider.addEventListener('input', function() {
+                const resistance = parseFloat(this.value);
+                currentResistance.textContent = resistance.toFixed(1) + ' Ω';
+                resistanceValue.textContent = resistance.toFixed(1);
+                
+                updatePower();
+                
+                // Check for voltage surge (R < 1Ω)
+                if (resistance < 1 && lastResistance >= 1) {
+                    triggerVoltageSurge();
+                }
+                
+                lastResistance = resistance;
+            });
+            
+            // Update power calculation
+            function updatePower() {
+                const resistance = parseFloat(resistanceSlider.value);
+                let power;
+                
+                if (resistance === 0) {
+                    powerOutput.innerHTML = '<span class="infinity">∞</span>';
+                } else {
+                    power = (FIXED_VOLTAGE * FIXED_VOLTAGE) / resistance;
+                    powerOutput.textContent = Math.round(power) + ' W';
+                }
+                
+                // Show/hide overload warning
+                if (resistance > 0 && power > OVERLOAD_THRESHOLD) {
+                    overloadWarning.style.display = 'block';
+                    
+                    // Create sparks
+                    if (!sparksActive) {
+                        createSparks();
+                        sparksActive = true;
+                        setTimeout(() => { sparksActive = false; }, 1000);
+                    }
+                } else {
+                    overloadWarning.style.display = 'none';
+                }
+            }
+            
+            // Create sparks animation
+            function createSparks() {
+                // Clear any existing sparks
+                sparksContainer.innerHTML = '';
+                
+                // Create 50 sparks
+                for (let i = 0; i < 50; i++) {
+                    const spark = document.createElement('div');
+                    spark.classList.add('spark');
+                    
+                    // Random position around the slider handle
+                    const sliderRect = resistanceSlider.getBoundingClientRect();
+                    const handlePosition = (resistanceSlider.value / resistanceSlider.max) * sliderRect.width;
+                    
+                    const x = sliderRect.left + handlePosition + (Math.random() * 60 - 30);
+                    const y = sliderRect.top + (Math.random() * 80 - 40);
+                    
+                    spark.style.left = x + 'px';
+                    spark.style.top = y + 'px';
+                    
+                    // Random size and animation duration
+                    const size = 3 + Math.random() * 6;
+                    spark.style.width = size + 'px';
+                    spark.style.height = size + 'px';
+                    spark.style.animationDuration = (0.3 + Math.random() * 0.7) + 's';
+                    
+                    sparksContainer.appendChild(spark);
+                    
+                    // Remove spark after animation completes
+                    setTimeout(() => {
+                        spark.remove();
+                    }, 800);
+                }
+            }
+            
+            // Voltage surge confetti effect
+            function triggerVoltageSurge() {
+                // Confetti effect
+                confetti({
+                    particleCount: 200,
+                    spread: 100,
+                    origin: { y: 0.6 },
+                    colors: ['#ffcc00', '#ffffff', '#ff9900']
+                });
+                
+                // Tesla coil effect text
+                const teslaText = document.createElement('div');
+                teslaText.className = 'equation';
+                teslaText.textContent = "TESLA COIL MODE ACTIVATED!";
+                teslaText.style.animation = "flash-warning 0.5s infinite alternate";
+                document.querySelector('.conspiracy').prepend(teslaText);
+                
+                setTimeout(() => {
+                    teslaText.remove();
+                }, 5000);
+            }
+            
+            // Share button functionality
+            shareBtn.addEventListener('click', function() {
+                const resistance = parseFloat(resistanceSlider.value);
+                const power = resistance === 0 ? 'INFINITY' : Math.round((FIXED_VOLTAGE * FIXED_VOLTAGE) / resistance) + 'W';
+                
+                const message = `🚨 BAKAR HIGH-BEAMER POWER REPORT 🚨%0A%0A` +
+                               `Resistance: ${resistance.toFixed(1)}Ω%0A` +
+                               `Power Output: ${power}%0A%0A` +
+                               `Bakar's high beams are generating enough energy to power ${Math.floor(Math.random() * 50) + 10} homes!%0A%0A` +
+                               `PhD Thesis: "Perpetual Motion from Bakar Nipple High Beamers"%0A` +
+                               `View the station: ${window.location.href}`;
+                
+                // Copy to clipboard
+                navigator.clipboard.writeText(decodeURIComponent(message)).then(() => {
+                    // Show confirmation
+                    const originalText = shareBtn.innerHTML;
+                    shareBtn.innerHTML = '<i class="fas fa-check"></i> REPORT COPIED!';
+                    
+                    setTimeout(() => {
+                        shareBtn.innerHTML = originalText;
+                    }, 2000);
+                });
+            });
+            
+            // Easter egg detection
+            document.addEventListener('keydown', function(e) {
+                keySequence += e.key.toUpperCase();
+                eggIndicator.textContent = `Easter Egg: ${keySequence}`;
+                
+                if (keySequence.length > 20) {
+                    keySequence = keySequence.substring(1);
+                }
+                
+                // Check for all easter egg codes
+                for (const code in easterEggs) {
+                    if (keySequence.includes(code)) {
+                        if (!easterEggActive) {
+                            easterEggActive = true;
+                            eggTitle.textContent = easterEggs[code].title;
+                            eggText.textContent = easterEggs[code].text;
+                            easterEgg.classList.add('active');
+                            easterEggs[code].action();
+                            
+                            // Reset key sequence after activation
+                            setTimeout(() => {
+                                keySequence = '';
+                                eggIndicator.textContent = 'Easter Egg: None';
+                            }, 1000);
+                        }
+                    }
+                }
+            });
+            
+            // Close easter egg
+            closeEgg.addEventListener('click', function() {
+                easterEggActive = false;
+                easterEgg.classList.remove('active');
+                keySequence = '';
+                eggIndicator.textContent = 'Easter Egg: None';
+            });
+        });
+    </script>
+</body>
+</html>
